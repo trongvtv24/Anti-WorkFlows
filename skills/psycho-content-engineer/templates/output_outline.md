@@ -14,9 +14,13 @@
 
 🎯 Mục tiêu: [Chốt sale / Kéo tương tác / Viral / Nurture]
 👤 Target: [Mô tả ngắn đối tượng]
-🎭 Persona: [The Authority / Friend / Rebel / Mentor / Insider]
+🎭 Persona: [The Authority / Friend / Rebel / Mentor / Insider / Customer-UGC]
 😨 Cảm xúc chủ đạo: [Cảm xúc 1] + [Cảm xúc 2 nếu có]
 ⚗️ Cialdini: [Nguyên tắc 1] + [Nguyên tắc 2] + [Nguyên tắc 3]
+🛡️ Proof audit:
+   • Đã có bằng chứng: [proof user cung cấp]
+   • Chưa có bằng chứng: [placeholder sẽ giữ nguyên]
+   • Không được tự bịa: [số liệu/testimonial/deadline/slot/authority claim]
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -42,7 +46,7 @@ Kỹ thuật Mitnick: [Word substitution / Presupposition / Contrast framing]
 
 [BLOCK 4: SOCIAL PROOF]
 Loại: [Expert / Celebrity / User testimonial / Số liệu đám đông]
-Nội dung gợi ý: "[Loại bằng chứng và format]"
+Nội dung gợi ý: "[Chỉ dùng bằng chứng user cung cấp; nếu thiếu thì để placeholder]"
 Kỹ thuật: Cialdini Social Proof #3
 Độ dài: 2-4 câu
 
@@ -56,7 +60,7 @@ Hướng viết: "[Cách reframe cụ thể]"
 Hành động mong muốn: [Click / DM / Comment / Subscribe / Mua...]
 CTA text gợi ý: "[Câu CTA reward-framed]"
 Kỹ thuật: Duhigg REWARD-framed
-Urgency element: [Scarcity / Deadline / Giới hạn nếu cần]
+Urgency element: [Chỉ dùng Scarcity / Deadline / Giới hạn nếu có bằng chứng thật]
 Độ dài: 1-2 câu
 
 [BLOCK 7: P.S. — Tùy chọn]
@@ -108,7 +112,7 @@ Mitnick: "Đầu tư" thay vì "chi tiền học"; "Hệ thống" thay vì "mẹ
 
 [BLOCK 4: SOCIAL PROOF]
 Loại: User testimonial cụ thể (tên thật, nghề thật, kết quả thật)
-Format: 2-3 testimonial ngắn, có tên + chức vụ + kết quả số
+Format: 2-3 testimonial ngắn, có tên + chức vụ + kết quả số nếu Sếp cung cấp; nếu chưa có, giữ `[TESTIMONIAL THẬT]`
 
 [BLOCK 5: REFRAME]
 Kỹ thuật: Cost of Inaction vs Cost of Action
@@ -118,7 +122,7 @@ Presupposition: "Khi bạn áp dụng vào portfolio lần đầu..."
 [BLOCK 6: CTA]
 Hành động: Click link / DM "HỌC"
 CTA: "Bắt đầu hành trình tự do tài chính →"
-Urgency: "Khóa học tháng này còn [X] suất Early Bird"
+Urgency: "[DEADLINE/SỐ SUẤT THẬT nếu Sếp cung cấp]"
 
 [BLOCK 7: P.S.]
 Mục đích: Scarcity + FOMO

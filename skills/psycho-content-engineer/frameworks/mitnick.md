@@ -3,6 +3,10 @@
 > File này là "công nghệ đóng khung". AI đọc ở Bước 7 để kiểm soát nhận thức
 > người đọc từ dòng đầu tiên. Người đọc không nhìn thấy công thức — chỉ cảm thấy.
 
+## 🛡️ PROOF SAFETY RULE
+
+Framing chỉ được dùng để làm rõ giá trị thật. Không dùng anchoring, presupposition, hoặc reality tunneling để biến claim chưa kiểm chứng thành sự thật. Mọi con số, giá, ROI, thời hạn, kết quả, hoặc so sánh trong ví dụ phải được thay bằng dữ kiện Sếp cung cấp hoặc placeholder rõ ràng.
+
 ---
 
 ## 🧠 TRIẾT LÝ CỐT LÕI

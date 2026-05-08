@@ -3,6 +3,10 @@
 > Nguồn gốc: Phân tích từ bài viral thực tế "Chồng nghèo thật hay giả nghèo" — reverse-engineer từ
 > một bài đạt hàng chục nghìn tương tác organic không tốn 1 đồng quảng cáo.
 
+## 🛡️ PROOF SAFETY RULE
+
+Hook viral được phép mạnh về góc nhìn, nhưng không được bịa sự kiện, drama, số tương tác, nhân vật, thương hiệu, hoặc kết quả. Nếu chưa có dữ kiện thật, dùng tình huống giả định có nhãn rõ ràng hoặc hỏi Sếp thêm context.
+
 ---
 
 ## 🧬 DNA CỦA MỘT BÀI VIRAL
@@ -378,6 +382,6 @@ Open Loop: "Thứ đó là… [cắt]"
 
 ---
 
-*"Người đọc không share vì bài hay. Họ share vì bài NÓI THAY HỌ
-những điều họ cảm thấy nhưng không biết diễn đạt."*
-*— Rút ra từ phân tích 1000+ bài Facebook viral, 2024-2025*
+*"Người đọc không share chỉ vì bài hay. Họ share vì bài nói thay họ
+những điều họ cảm thấy nhưng chưa biết diễn đạt."*
+*— Ghi chú phương pháp: dùng như nguyên tắc thực hành, không trình bày như kết luận nghiên cứu nếu chưa có dữ liệu kiểm chứng.*

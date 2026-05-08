@@ -36,7 +36,7 @@ CUE (Tín hiệu) → ROUTINE (Hành vi) → REWARD (Phần thưởng)
 ✅ "Nhận bí quyết miễn phí →"     → Tên của REWARD (nhận được thứ gì đó)
 ✅ "Bắt đầu hành trình tự do →"   → Tên của REWARD (trạng thái mơ ước)
 ✅ "Bảo vệ gia đình ngay hôm nay" → Tên của REWARD (cảm giác an toàn)
-✅ "Xem kết quả của 1,200 người →" → Tên của REWARD (thỏa mãn curiosity)
+✅ "Xem kết quả thật của [SỐ NGƯỜI/CASE ĐÃ XÁC MINH] →" → Tên của REWARD (thỏa mãn curiosity)
 ```
 
 ---

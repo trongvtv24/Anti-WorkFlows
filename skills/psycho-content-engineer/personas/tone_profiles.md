@@ -1,4 +1,4 @@
-# 🎭 TONE PROFILES — 5 Nhân cách Giọng điệu
+# 🎭 TONE PROFILES — 6 Nhân cách Giọng điệu
 
 > File này là "tủ hóa trang". AI đọc ở Bước 5 để chọn và hóa thân vào đúng persona.
 > Cùng 1 nội dung — persona khác nhau = bài viết hoàn toàn khác nhau.

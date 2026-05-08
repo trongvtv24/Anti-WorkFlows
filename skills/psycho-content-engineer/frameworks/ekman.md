@@ -1,6 +1,6 @@
 # 😨 EKMAN EMOTION MAP — Bản đồ 7 Cảm xúc nền
 
-> File này là "bản đồ tử huyệt". AI đọc ở Bước 3 để chọn đúng cảm xúc theo target.
+> File này là "bản đồ động lực cảm xúc". AI đọc ở Bước 3 để chọn đúng cảm xúc theo target.
 > Kích hoạt đúng cảm xúc = bài viết "sống". Sai cảm xúc = bài viết chết.
 
 ---
