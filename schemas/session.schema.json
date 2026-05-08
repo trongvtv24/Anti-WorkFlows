@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://awf.dev/schemas/session.schema.json",
+  "title": "AWF v4 Session State Schema",
+  "description": "Short-lived session state. Durable facts go to brain.json, decisions go to decisions.md, and claim verification gaps go to claims.md.",
+  "version": "4.0.0",
+  "type": "object",
+  "required": ["meta", "updated_at", "summary", "working_on"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "schema_version": { "type": "string", "default": "4.0.0" },
+        "awf_version": { "type": "string", "default": "4.0.0" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["schema_version", "awf_version", "created_at", "updated_at"]
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp"
+    },
+    "message_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Estimated message count for context-window warnings",
+      "default": 0
+    },
+    "summary": {
+      "type": "object",
+      "description": "Fast-load summary for /recap and /next",
+      "required": ["project", "status"],
+      "properties": {
+        "project": { "type": "string" },
+        "current_feature": { "type": ["string", "null"] },
+        "current_task": { "type": ["string", "null"] },
+        "status": {
+          "type": "string",
+          "enum": ["idle", "planning", "designing", "coding", "testing", "debugging", "reviewing", "deploying", "publishing", "paused"]
+        },
+        "progress_percent": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "last_action": { "type": ["string", "null"] },
+        "next_step": { "type": ["string", "null"] },
+        "blockers_count": { "type": "integer", "minimum": 0, "default": 0 }
+      }
+    },
+    "working_on": {
+      "type": "object",
+      "description": "Current work in progress",
+      "properties": {
+        "feature": { "type": ["string", "null"] },
+        "task": { "type": ["string", "null"] },
+        "status": {
+          "type": "string",
+          "enum": ["idle", "planning", "designing", "coding", "testing", "debugging", "reviewing", "deploying", "publishing", "paused"]
+        },
+        "files": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Files touched or under active attention in this session"
+        },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "current_plan_path": {
+      "type": ["string", "null"],
+      "description": "Path to the active plan/spec folder or file"
+    },
+    "current_phase": {
+      "type": ["string", "null"],
+      "description": "Current phase being worked on"
+    },
+    "pending_tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["task", "priority"],
+        "properties": {
+          "task": { "type": "string" },
+          "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+          "workflow": { "type": ["string", "null"] },
+          "notes": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "recent_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "type", "description"],
+        "properties": {
+          "timestamp": { "type": "string", "format": "date-time" },
+          "type": { "type": "string", "enum": ["feature", "bugfix", "refactor", "config", "docs", "test", "research", "content"] },
+          "description": { "type": "string" },
+          "files": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "errors_encountered": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["error", "resolved"],
+        "properties": {
+          "error": { "type": "string" },
+          "solution": { "type": ["string", "null"] },
+          "resolved": { "type": "boolean" },
+          "source": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "skipped_tests": {
+      "type": "array",
+      "description": "Skipped checks that must be surfaced before release/deploy decisions",
+      "items": {
+        "type": "object",
+        "required": ["test", "date", "reason"],
+        "properties": {
+          "test": { "type": "string" },
+          "reason": { "type": "string" },
+          "date": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "decision_refs": {
+      "type": "array",
+      "description": "Pointers to decisions.md entries, not the durable decision log itself",
+      "items": { "type": "string" }
+    },
+    "claim_refs": {
+      "type": "array",
+      "description": "Pointers to claims.md entries, not verified project facts",
+      "items": { "type": "string" }
+    },
+    "last_run": {
+      "type": ["object", "null"],
+      "properties": {
+        "command": { "type": "string" },
+        "status": { "type": "string", "enum": ["passed", "failed", "skipped", "unknown"] },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "notes": { "type": ["string", "null"] }
+      }
+    },
+    "handover_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "auto_save_config": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "notify_on_save": { "type": "boolean", "default": true },
+        "checkpoint_interval": { "type": "integer", "minimum": 1, "default": 15 },
+        "warn_threshold": { "type": "integer", "minimum": 1, "maximum": 100, "default": 80 },
+        "snapshot_retention_days": { "type": "integer", "minimum": 1, "default": 7 }
+      }
+    }
+  }
+}

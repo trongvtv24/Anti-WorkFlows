@@ -1,0 +1,192 @@
+{
+  "meta": {
+    "schema_version": "4.0.0",
+    "awf_version": "4.0.0",
+    "created_at": "2026-04-29T00:00:00+07:00",
+    "updated_at": "2026-04-29T00:00:00+07:00"
+  },
+  "project": {
+    "name": "coffee-shop-manager",
+    "description": "Quản lý tiệm cà phê: đơn hàng, nhân viên, doanh thu",
+    "type": "fullstack",
+    "status": "development",
+    "source": "mixed",
+    "repository": "https://github.com/user/coffee-shop-manager",
+    "urls": {
+      "local": "http://localhost:3000",
+      "staging": "https://staging.coffee-shop.example",
+      "production": "https://coffee-shop.example"
+    }
+  },
+  "tech_stack": {
+    "frontend": {
+      "framework": "Next.js 14",
+      "language": "TypeScript",
+      "ui_library": "shadcn/ui",
+      "state_management": "Zustand",
+      "styling": "TailwindCSS"
+    },
+    "backend": {
+      "framework": "Next.js API Routes",
+      "language": "TypeScript",
+      "runtime": "Node.js 20"
+    },
+    "database": {
+      "type": "PostgreSQL",
+      "orm": "Prisma",
+      "name": "coffee_shop_db"
+    },
+    "infrastructure": {
+      "hosting": "Vercel",
+      "cdn": "Vercel Edge",
+      "ci_cd": "GitHub Actions"
+    },
+    "dependencies": [
+      {
+        "name": "next-auth",
+        "version": "^5.0.0",
+        "purpose": "Authentication",
+        "source": "package.json"
+      },
+      {
+        "name": "recharts",
+        "version": "^2.0.0",
+        "purpose": "Dashboard charts",
+        "source": "package.json"
+      }
+    ]
+  },
+  "architecture": {
+    "pattern": "Feature-based modular",
+    "modules": [
+      {
+        "name": "auth",
+        "path": "src/features/auth",
+        "responsibility": "Authentication and authorization",
+        "dependencies": ["next-auth", "prisma"],
+        "source": "repo_observed"
+      },
+      {
+        "name": "orders",
+        "path": "src/features/orders",
+        "responsibility": "Order management CRUD",
+        "dependencies": ["prisma", "zustand"],
+        "source": "repo_observed"
+      }
+    ],
+    "external_services": [
+      {
+        "name": "Resend",
+        "purpose": "Email notifications",
+        "env_vars": ["RESEND_API_KEY"],
+        "source": "user_confirmed"
+      }
+    ]
+  },
+  "database_schema": {
+    "summary": "App lưu thông tin user, đơn hàng, sản phẩm và báo cáo doanh thu.",
+    "tables": [
+      {
+        "name": "users",
+        "description": "Nhân viên và admin",
+        "columns": [
+          { "name": "id", "type": "uuid", "primary": true, "nullable": false },
+          { "name": "email", "type": "string", "nullable": false },
+          { "name": "role", "type": "enum(ADMIN,STAFF)", "nullable": false }
+        ]
+      },
+      {
+        "name": "orders",
+        "description": "Đơn hàng",
+        "columns": [
+          { "name": "id", "type": "uuid", "primary": true, "nullable": false },
+          { "name": "user_id", "type": "uuid", "foreign_key": "users.id", "nullable": false },
+          { "name": "total", "type": "decimal", "nullable": false }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "from": "orders",
+        "to": "users",
+        "type": "many-to-one",
+        "description": "Mỗi order thuộc về một user"
+      }
+    ],
+    "relationships_explained": "Một nhân viên có thể tạo nhiều đơn hàng; mỗi đơn hàng thuộc về đúng một nhân viên."
+  },
+  "api_endpoints": [
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "description": "Đăng nhập",
+      "explained": "Gửi email và mật khẩu, nhận lại phiên đăng nhập.",
+      "auth_required": false,
+      "request_body": { "email": "string", "password": "string" },
+      "response": { "user": "object" },
+      "source": "src/app/api/auth/login/route.ts"
+    }
+  ],
+  "business_rules": [
+    {
+      "id": "BR001",
+      "domain": "orders",
+      "rule": "Đơn hàng lớn hơn 500,000 VND được giảm 5%.",
+      "implementation": "src/features/orders/utils/calculate-discount.ts",
+      "exceptions": ["Không áp dụng cho combo"],
+      "source": "user_confirmed"
+    }
+  ],
+  "features": [
+    {
+      "name": "Authentication",
+      "status": "implemented",
+      "spec_file": "docs/specs/auth_spec.md",
+      "files": ["src/features/auth/**"],
+      "notes": "Credentials provider",
+      "source": "repo_observed"
+    }
+  ],
+  "knowledge_items": {
+    "patterns": [
+      {
+        "name": "Server Actions",
+        "description": "Dùng Next.js Server Actions cho mutations.",
+        "example_file": "src/features/orders/actions/create-order.ts"
+      }
+    ],
+    "gotchas": [
+      {
+        "issue": "Prisma client not found in production",
+        "cause": "Vercel cần generate Prisma client trong build.",
+        "solution": "Thêm prisma generate vào postinstall script.",
+        "affected_files": ["package.json"]
+      }
+    ],
+    "conventions": [
+      {
+        "area": "file naming",
+        "convention": "kebab-case cho files, PascalCase cho components.",
+        "example": "revenue-chart.tsx exports RevenueChart"
+      }
+    ]
+  },
+  "environment": {
+    "variables": [
+      {
+        "name": "DATABASE_URL",
+        "description": "PostgreSQL connection string",
+        "required": true,
+        "example": "postgresql://user:pass@localhost:5432/db",
+        "secret": true
+      }
+    ],
+    "scripts": {
+      "dev": "next dev",
+      "build": "prisma generate && next build",
+      "test": "vitest",
+      "lint": "eslint ."
+    }
+  },
+  "updated_at": "2026-04-29T00:00:00+07:00"
+}

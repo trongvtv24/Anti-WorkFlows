@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "schema_version": "4.0.0",
+    "awf_version": "4.0.0",
+    "created_at": "2026-04-29T00:00:00+07:00",
+    "updated_at": "2026-04-29T00:00:00+07:00"
+  },
+  "updated_at": "2026-04-29T00:00:00+07:00",
+  "message_count": 12,
+  "summary": {
+    "project": "coffee-shop-manager",
+    "current_feature": "Revenue Reports",
+    "current_task": "Implement daily revenue chart",
+    "status": "coding",
+    "progress_percent": 65,
+    "last_action": "Added revenue API endpoint",
+    "next_step": "Wire chart component with date range filter",
+    "blockers_count": 0
+  },
+  "working_on": {
+    "feature": "Revenue Reports",
+    "task": "Implement daily revenue chart",
+    "status": "coding",
+    "files": [
+      "src/features/reports/components/revenue-chart.tsx",
+      "src/features/reports/api/get-revenue.ts"
+    ],
+    "blockers": [],
+    "notes": "Using recharts for visualization"
+  },
+  "current_plan_path": "docs/specs/revenue-reports.md",
+  "current_phase": "phase-03-ui",
+  "pending_tasks": [
+    {
+      "task": "Add date range filter to revenue chart",
+      "priority": "medium",
+      "workflow": "/code",
+      "notes": "User request from demo"
+    },
+    {
+      "task": "Fix timezone issue in report",
+      "priority": "high",
+      "workflow": "/debug",
+      "notes": "Report shows UTC, needs GMT+7"
+    }
+  ],
+  "recent_changes": [
+    {
+      "timestamp": "2026-04-29T09:00:00+07:00",
+      "type": "feature",
+      "description": "Added revenue API endpoint",
+      "files": ["src/features/reports/api/get-revenue.ts"]
+    }
+  ],
+  "errors_encountered": [
+    {
+      "error": "Prisma client not found in production",
+      "solution": "Add prisma generate to postinstall script",
+      "resolved": true,
+      "source": "build log"
+    }
+  ],
+  "skipped_tests": [],
+  "decision_refs": ["2026-04-29-use-recharts"],
+  "claim_refs": [],
+  "last_run": {
+    "command": "npm test",
+    "status": "passed",
+    "timestamp": "2026-04-29T10:00:00+07:00",
+    "notes": "Unit tests only; E2E not run"
+  },
+  "handover_required": false,
+  "auto_save_config": {
+    "enabled": true,
+    "notify_on_save": true,
+    "checkpoint_interval": 15,
+    "warn_threshold": 80,
+    "snapshot_retention_days": 7
+  }
+}
