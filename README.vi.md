@@ -20,7 +20,7 @@ AntiWF_FIN là bộ hệ thống AWF v4 dành cho Antigravity, gồm các workfl
 Luồng phát triển phần mềm chính:
 
 ```text
-/init -> /brainstorm -> /plan -> /design -> /visualize -> /code -> /run -> /test -> /audit -> /deploy
+/init -> /intake -> /brainstorm -> /plan -> /story -> /design -> /visualize -> /code -> /run -> /test -> /proof -> /audit -> /deploy
 ```
 
 Bảo trì và khôi phục:
@@ -32,7 +32,7 @@ Bảo trì và khôi phục:
 Content và publishing:
 
 ```text
-/script -> /fb-post
+/seo-ai-overview -> /save-brain
 ```
 
 ## Cam Kết Của AWF v4
@@ -94,6 +94,5 @@ Validator này hỗ trợ AWF extended frontmatter như `risk_level`, `required_
 
 ## Ghi Chú
 
-- `fb-publisher` được giữ là skill publishing private/local.
 - Runtime data, cache folder, local session data, log và secret không nên đưa vào commit mới trừ khi chủ động version hóa.
 - Sau khi thay đổi metadata của workflow hoặc skill, hãy validate để chắc mọi path trong `awf_manifest.yaml` còn tồn tại.

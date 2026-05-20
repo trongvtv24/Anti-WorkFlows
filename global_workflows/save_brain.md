@@ -31,6 +31,7 @@ writes:
   - ".brain/decisions.md"
   - ".brain/claims.md"
   - ".brain/preferences.json"
+  - ".brain/snapshots/"
 required_gates:
   - "context_system"
   - "global_safety_truthfulness_gate"
@@ -52,6 +53,13 @@ Bạn là **Antigravity Librarian**. Nhiệm vụ: Chống lại "Context Drift"
 
 **Nguyên tắc:** "Code thay đổi → Docs thay đổi NGAY LẬP TỨC"
 
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `awf-auto-save` (required): luôn điều phối write boundaries theo `CONTEXT_SYSTEM`.
+- `awf-note-taking` (conditional): chỉ bật khi user yêu cầu tạo ghi chú narrative bổ sung ngoài memory chuẩn.
+
+Rule cứng: `brain.json` chỉ nhận stable facts đã verify; session artifacts cập nhật riêng, không trộn.
+
 ---
 
 ## 🧠 Context System Contract (AWF 4.0)
@@ -69,6 +77,16 @@ Bạn là **Antigravity Librarian**. Nhiệm vụ: Chống lại "Context Drift"
 | `.brain/preferences.json` | Tuỳ chỉnh giao tiếp/cách làm việc local của project |
 
 **Không được lưu assumption vào `brain.json` như fact.** Claim chưa kiểm chứng phải vào `claims.md`.
+
+### Stable Knowledge Write Gate (BẮT BUỘC)
+
+Khi `/save-brain` định sửa các vùng stable knowledge của `brain.json` (`tech_stack`, `architecture`, `database_schema`, `api_endpoints`, `business_rules`, `features`, `environment`):
+
+1. Tạo **proposed diff** so với `brain.json` hiện tại.
+2. Gắn nhãn nguồn cho từng thay đổi: `repo_observed`, `user_confirmed`, `inferred`.
+3. Chỉ thay đổi có nguồn `repo_observed` hoặc `user_confirmed` mới được ghi thẳng.
+4. Thay đổi `inferred` phải xin user approve trước khi ghi.
+5. Nếu user không approve, giữ nguyên phần stable knowledge cũ.
 
 ---
 
@@ -430,12 +448,12 @@ Khi có API mới, tự động append vào file docs hiện có.
 ├── claims.md                      # 🛡️ Claim/assumption ledger
 └── preferences.json               # ⚙️ Local override (nếu khác global)
 
-~/.gemini/antigravity/             # GLOBAL (tất cả dự án)
+$ANTIGRAVITY_HOME/                 # GLOBAL (tất cả dự án)
 ├── preferences.json               # Default preferences
 └── defaults/                      # Templates
 
 # Legacy fallback (nếu đang dùng bản cũ):
-~/.antigravity/                    # GLOBAL (legacy)
+$ANTIGRAVITY_LEGACY_HOME/          # GLOBAL (legacy)
 ├── preferences.json               # Default preferences
 └── defaults/                      # Templates
 ```
@@ -525,27 +543,46 @@ Chứa thông tin thay đổi liên tục:
 
 ### 6.5. Các bước tạo/update
 
-**Bước 1: Update brain.json (nếu có thay đổi project)**
-- Scan `package.json` → tech_stack
-- Scan `prisma/schema.prisma` → database_schema
-- Scan `src/app/api/**` → api_endpoints
-- Scan `docs/specs/*.md` → features
+**Bước 0: Snapshot trước khi ghi memory**
+- Tạo snapshot timestamped cho:
+  - `.brain/brain.json` (nếu file tồn tại)
+  - `.brain/session.json` (nếu file tồn tại)
+- Lưu tại `.brain/snapshots/brain/` và `.brain/snapshots/session/`
+- Giữ retention tối thiểu 7 ngày (hoặc theo `auto_save_config.snapshot_retention_days`)
 
-**Bước 2: Update session.json (luôn update)**
+**Bước 1: Build proposed stable diff cho `brain.json`**
+- Thu thập facts từ repo:
+  - `package.json` → tech_stack
+  - `prisma/schema.prisma` → database_schema
+  - `src/app/api/**` → api_endpoints
+  - `docs/specs/*.md` → features
+- So sánh với `brain.json` hiện có và tạo diff:
+  - Added / Updated / Removed
+  - Mỗi item bắt buộc có `source`
+
+**Bước 2: Approval gate cho stable knowledge**
+- Hiển thị diff ngắn gọn cho user:
+  - `repo_observed`: có thể auto-apply
+  - `user_confirmed`: apply nếu còn hợp lệ
+  - `inferred`: bắt buộc xin approve
+- Chỉ ghi `brain.json` sau khi user xác nhận phần thay đổi cần xác nhận.
+- Nếu user từ chối hoặc chưa trả lời rõ: bỏ qua ghi stable fields, chỉ cập nhật session state.
+
+**Bước 3: Update session.json (luôn update)**
 - Files đã modified → recent_changes
 - Task đang làm → working_on
 - Errors gặp phải → errors_encountered
-- Quyết định đã lấy → append vào `decisions.md`, lưu pointer trong `session.json` → `decision_refs`
-- Claim/assumption chưa kiểm chứng → append vào `claims.md`, lưu pointer trong `session.json` → `claim_refs`
+- Quyết định đã lấy → append `decisions.md`, lưu pointer trong `session.json` → `decision_refs`
+- Claim/assumption chưa kiểm chứng → append `claims.md`, lưu pointer trong `session.json` → `claim_refs`
 
-**Bước 3: Validate**
+**Bước 4: Validate**
 - Schema: `schemas/brain.schema.json`, `schemas/session.schema.json`
 - Nếu có update preferences: validate thêm `schemas/preferences.schema.json`
-- Đảm bảo JSON hợp lệ trước khi save
+- Chỉ báo "đã validate" nếu thực sự chạy validate
 
-**Bước 4: Save**
-- `.brain/brain.json` - add vào `.gitignore` hoặc commit nếu team share
-- `.brain/session.json` - luôn trong `.gitignore` (local state)
+**Bước 5: Save**
+- `.brain/brain.json` - chỉ save khi đã qua approval gate (nếu có stable diff)
+- `.brain/session.json` - luôn update
 - `.brain/session_log.txt` - append checkpoint, không rewrite lịch sử
 - `.brain/decisions.md` và `.brain/claims.md` - append-only, không silently xoá dòng cũ
 
@@ -561,6 +598,10 @@ Chứa thông tin thay đổi liên tục:
     *   ...
 2.  "Giờ đây em đã ghi nhớ kiến thức này vĩnh viễn."
 3.  "Anh có thể tắt máy yên tâm. Mai dùng `/recap` là em nhớ lại hết."
+
+Nếu có stable diff chưa được approve:
+- Báo rõ: "Em chưa ghi vào `brain.json` các mục sau vì chưa có xác nhận: [...]"
+- Vẫn lưu progress vào `session.json` để không mất trạng thái làm việc.
 
 ### 7.1. Quick Stats
 ```
@@ -605,9 +646,9 @@ Chứa thông tin thay đổi liên tục:
 ### Khi JSON invalid:
 ```
 Nếu brain.json/session.json bị corrupted:
-→ Tạo backup: brain.json.bak
-→ Tạo file mới từ template
-→ Báo user: "File cũ bị lỗi, em đã tạo mới và backup file cũ"
+→ Ưu tiên restore từ snapshot mới nhất trong `.brain/snapshots/`
+→ Nếu restore thất bại: tạo backup `*.corrupted.bak` rồi tạo file mới từ template
+→ Báo user rõ đường dẫn snapshot/backup đã dùng
 ```
 
 ### Error messages đơn giản:

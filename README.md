@@ -33,7 +33,7 @@ Maintenance and recovery:
 Content and publishing:
 
 ```text
-/script -> /fb-post
+/seo-ai-overview -> /save-brain
 ```
 
 ## AWF v4 Guarantees
@@ -99,6 +99,5 @@ This validator accepts AWF extended frontmatter such as `risk_level`, `required_
 
 ## Notes
 
-- `fb-publisher` is intentionally left as a private/local publishing skill.
 - Runtime data, cache folders, local session data, logs, and secrets should stay out of new commits unless deliberately versioned.
 - After changing workflow or skill metadata, validate that every path in `awf_manifest.yaml` exists.

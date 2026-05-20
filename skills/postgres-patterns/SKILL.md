@@ -17,6 +17,7 @@ allowed_side_effects:
   - "migration_after_confirmation"
 requires_confirmation: true
 related_workflows:
+  - "/plan"
   - "/design"
   - "/code"
   - "/audit"

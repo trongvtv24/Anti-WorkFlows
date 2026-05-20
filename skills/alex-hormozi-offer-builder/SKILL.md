@@ -17,7 +17,6 @@ allowed_side_effects:
 requires_confirmation: false
 related_workflows:
   - "/brainstorm"
-  - "/fb-post"
 required_gates:
   - "global_safety_truthfulness_gate"
 # AWF_METADATA_END

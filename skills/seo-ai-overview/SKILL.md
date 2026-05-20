@@ -1,4 +1,5 @@
 ---
+type: skill
 name: seo-ai-overview
 description: >
   SEO AI Overview Agent — Tự động hóa toàn bộ quy trình sản xuất bài SEO chất lượng cao
@@ -23,6 +24,7 @@ Các câu lệnh/yêu cầu sẽ kích hoạt skill:
 - `"Viết bài SEO về [keyword]"`
 - `"Tạo bài chuẩn AI Overview về [chủ đề]"`
 - `"Research và viết content SEO cho [topic]"`
+- `/seo-ai-overview [keyword]`
 - `/seo [keyword]`
 
 ---
@@ -36,6 +38,19 @@ Các câu lệnh/yêu cầu sẽ kích hoạt skill:
 **Fallback khi không có search:**
 - Agent yêu cầu user paste thủ công: nội dung AI Overview, heading top 5 bài, raw data từng mảnh
 - Vẫn có thể thực hiện G0, G3, G5, G6, G7 mà không cần search
+
+## Tool Availability Gate (BẮT BUỘC ở G0)
+
+Trước khi chạy G1:
+
+1. Kiểm tra tool availability:
+   - Có `search_web` không?
+   - Có `browser_subagent` không?
+2. Nếu thiếu một hoặc cả hai:
+   - Báo rõ tool nào thiếu.
+   - Chuyển sang chế độ `manual-evidence`.
+   - Yêu cầu user cung cấp input thay thế (AI Overview copy, top URL, raw facts).
+3. Không được silent fail. Mọi fallback phải được thông báo rõ trong Intake Brief.
 
 ---
 

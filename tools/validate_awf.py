@@ -6,9 +6,11 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shlex
 import subprocess
 import sys
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -63,10 +65,7 @@ SKILL_REQUIRED_KEYS = {
     "requires_confirmation",
 }
 
-VISUAL_JSON_EXAMPLE_FILES = (
-    "skills/timestamp-to-visual-prompt/SKILL.md",
-    "skills/squirrel-video-director/SKILL.md",
-)
+VISUAL_JSON_EXAMPLE_FILES: tuple[str, ...] = ()
 
 HARNESS_REQUIRED_ARTIFACTS = (
     "harness/README.md",
@@ -161,6 +160,8 @@ SUGGESTION_ONLY_MUTATION_MARKERS = (
 )
 
 SUGGESTION_ONLY_EXEMPTION = "this skill itself does not edit files"
+TASK_CHECKPOINT_REQUIRED_KEYS = ("workflow", "phase", "task_index", "task_id", "status")
+TASK_CHECKPOINT_ALLOWED_STATUS = {"done", "failed", "in_progress", "paused"}
 
 
 @dataclass(frozen=True)
@@ -331,7 +332,7 @@ class AwfValidator:
 
         self.validate_workflows(workflows, skill_names, workflow_commands, gate_names)
         self.validate_skills(skills, workflow_commands, gate_names)
-        self.validate_manifest_coverage(workflows, skills)
+        self.validate_manifest_coverage(workflows, skills, gates)
         self.validate_semantic_contracts(workflows, skills)
         return manifest
 
@@ -471,19 +472,40 @@ class AwfValidator:
                     if skill not in skill_names:
                         self.error(owner, f"Unknown `{key}` skill hook: {skill}")
 
-    def validate_manifest_coverage(self, workflows: list[Any], skills: list[Any]) -> None:
+    def validate_manifest_coverage(
+        self,
+        workflows: list[Any],
+        skills: list[Any],
+        gates: dict[str, Any],
+    ) -> None:
         manifest_workflow_paths = {str(w.get("path")).replace("\\", "/") for w in workflows if isinstance(w, dict)}
         manifest_skill_paths = {str(s.get("path")).replace("\\", "/") for s in skills if isinstance(s, dict)}
+        gate_paths = {
+            str(gate.get("path")).replace("\\", "/")
+            for gate in gates.values()
+            if isinstance(gate, dict) and isinstance(gate.get("path"), str)
+        }
 
         for path in (self.root / "global_workflows").glob("*.md"):
             rel = self.rel(path)
-            if path.name in {"CONTEXT_SYSTEM.md", "GLOBAL_SAFETY_TRUTHFULNESS_GATE.md"}:
+            if rel in gate_paths:
+                continue
+
+            fm = self.extract_frontmatter(path)
+            if not fm:
+                continue
+            if fm.get("type") != "workflow":
                 continue
             if rel not in manifest_workflow_paths:
                 self.warn(rel, "Workflow markdown file is not listed in awf_manifest.yaml.")
 
         for path in (self.root / "skills").rglob("SKILL.md"):
             rel = self.rel(path)
+            fm = self.extract_frontmatter(path)
+            if not fm:
+                continue
+            if fm.get("type") != "skill":
+                continue
             if rel not in manifest_skill_paths:
                 self.warn(rel, "Skill file is not listed in awf_manifest.yaml.")
 
@@ -550,7 +572,12 @@ class AwfValidator:
                 stderr=subprocess.DEVNULL,
                 check=True,
             )
-            return [self.root / line for line in proc.stdout.splitlines() if line.strip()]
+            tracked = [self.root / line for line in proc.stdout.splitlines() if line.strip()]
+            if tracked:
+                return tracked
+            # Repo may contain only untracked files (fresh bootstrap). In that case
+            # git ls-files is empty and we must fall back to a filesystem scan.
+            return sorted(p for p in self.root.rglob("*.json") if ".git" not in p.parts)
         except Exception:
             return sorted(p for p in self.root.rglob("*.json") if ".git" not in p.parts)
 
@@ -630,12 +657,90 @@ class AwfValidator:
         for rel_path, required_sections in HARNESS_TEMPLATE_SECTIONS.items():
             self.validate_harness_template_sections(rel_path, required_sections)
 
+    def _is_iso_timestamp(self, value: str) -> bool:
+        try:
+            datetime.fromisoformat(value.replace("Z", "+00:00"))
+            return True
+        except ValueError:
+            return False
+
+    def _parse_kv_tokens(self, body: str, owner: str) -> dict[str, str]:
+        try:
+            tokens = shlex.split(body)
+        except ValueError as exc:
+            self.error(owner, f"Invalid log tokenization: {exc}")
+            return {}
+
+        data: dict[str, str] = {}
+        for token in tokens:
+            if "=" not in token:
+                continue
+            key, value = token.split("=", 1)
+            if key:
+                data[key] = value
+        return data
+
+    def validate_session_log_contract(self) -> None:
+        log_path = self.root / ".brain" / "session_log.txt"
+        if not log_path.exists():
+            return
+
+        owner = self.rel(log_path)
+        try:
+            lines = log_path.read_text(encoding="utf-8").splitlines()
+        except Exception as exc:
+            self.error(owner, f"Cannot read session log: {exc}")
+            return
+
+        line_pattern = re.compile(r"^\[(?P<timestamp>[^\]]+)\]\s+(?P<body>.+)$")
+        for index, raw_line in enumerate(lines, start=1):
+            line = raw_line.strip()
+            if not line:
+                continue
+
+            match = line_pattern.match(line)
+            if not match:
+                self.error(owner, f"Line {index}: invalid log prefix format.")
+                continue
+
+            timestamp = match.group("timestamp")
+            if not self._is_iso_timestamp(timestamp):
+                self.error(owner, f"Line {index}: timestamp is not ISO-8601 (`{timestamp}`).")
+
+            data = self._parse_kv_tokens(match.group("body"), owner)
+            trigger = data.get("trigger")
+            if not trigger:
+                self.error(owner, f"Line {index}: missing `trigger=` token.")
+                continue
+
+            if trigger == "task_checkpoint":
+                missing = [key for key in TASK_CHECKPOINT_REQUIRED_KEYS if key not in data]
+                if missing:
+                    self.error(owner, f"Line {index}: task_checkpoint missing keys: {', '.join(missing)}")
+                    continue
+
+                task_index = data.get("task_index", "")
+                if not task_index.isdigit() or int(task_index) <= 0:
+                    self.error(owner, f"Line {index}: invalid `task_index` (`{task_index}`), must be positive integer.")
+
+                status = data.get("status", "")
+                if status not in TASK_CHECKPOINT_ALLOWED_STATUS:
+                    self.error(
+                        owner,
+                        f"Line {index}: invalid `status` (`{status}`), allowed: {sorted(TASK_CHECKPOINT_ALLOWED_STATUS)}",
+                    )
+
+                workflow = data.get("workflow", "")
+                if not workflow.startswith("/"):
+                    self.error(owner, f"Line {index}: invalid `workflow` (`{workflow}`), must start with '/'.")
+
     def run(self) -> int:
         self.validate_manifest()
         self.validate_json_files()
         self.validate_schema_templates()
         self.validate_visual_json_examples()
         self.validate_harness_contracts()
+        self.validate_session_log_contract()
 
         if self.strict and self.warnings:
             for issue in self.warnings:

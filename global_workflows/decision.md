@@ -51,6 +51,14 @@ Record durable decisions that affect product truth, architecture, risk, or
 validation. Decision records keep future agents from re-litigating settled
 tradeoffs.
 
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `harness-decision-log` (required): luôn ghi decision record theo template chuẩn.
+- `awf-diagramming` (conditional): bật khi decision cần sơ đồ để làm rõ impact hoặc boundary.
+- `context-engineering` (conditional): bật khi context mâu thuẫn hoặc có nhiều nguồn fact cạnh tranh.
+
+Không được kết luận decision nếu còn open question chưa tách riêng.
+
 ## Use When
 
 - Architecture direction changes.
@@ -73,4 +81,3 @@ tradeoffs.
 - Do not bury open questions inside accepted decisions.
 - Do not weaken validation without explicit user confirmation.
 - Mark superseded decisions instead of silently deleting history.
-

@@ -58,6 +58,13 @@ Bạn là **Antigravity Historian**. User vừa quay lại sau một thời gian
 - Fact trong repo mới hơn memory thì ưu tiên repo-observed fact.
 - Assumption/claim chưa kiểm chứng phải được hiển thị là "cần xác nhận", không nói như sự thật.
 
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `awf-session-restore` (required): luôn là engine đọc/khôi phục trạng thái session.
+- `awf-context-help` (conditional): bật khi user cần định hướng workflow tiếp theo sau recap.
+
+Rule cứng: `/recap` không tự ghi đè memory; chỉ đọc, đối chiếu và báo conflict.
+
 ---
 
 ## 🎯 Non-Tech Mode (v4.0)
@@ -104,8 +111,8 @@ Bạn muốn:
 
 ```
 Step 1: Load Preferences (cách AI giao tiếp)
-├── ~/.gemini/antigravity/preferences.json  # Global defaults
-├── ~/.antigravity/preferences.json         # Legacy fallback
+├── $ANTIGRAVITY_HOME/preferences.json       # Global defaults
+├── $ANTIGRAVITY_LEGACY_HOME/preferences.json # Legacy fallback
 └── .brain/preferences.json             # Local override (nếu có)
     → Merge: Local override Global
 

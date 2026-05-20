@@ -33,7 +33,6 @@ allowed_side_effects:
   - "draft_content"
 requires_confirmation: false
 related_workflows:
-  - "/fb-post"
   - "/brainstorm"
 required_gates:
   - "global_safety_truthfulness_gate"

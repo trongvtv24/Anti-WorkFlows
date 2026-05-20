@@ -19,6 +19,7 @@ related_workflows:
   - "/audit"
   - "/deploy"
   - "/review"
+  - "/seo-ai-overview"
 required_gates:
   - "global_safety_truthfulness_gate"
 # AWF_METADATA_END

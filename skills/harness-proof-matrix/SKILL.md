@@ -19,6 +19,7 @@ requires_confirmation: false
 related_workflows:
   - "/proof"
   - "/test"
+  - "/review"
   - "/audit"
 required_gates:
   - "global_safety_truthfulness_gate"
@@ -45,4 +46,3 @@ validation. The matrix records what proof exists and what risk remains.
 - Command output must be from the current session.
 - Screenshots or reports must have stable file paths.
 - Missing proof must stay visible as a gap.
-

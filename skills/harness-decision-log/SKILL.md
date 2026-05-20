@@ -20,6 +20,7 @@ related_workflows:
   - "/decision"
   - "/plan"
   - "/design"
+  - "/review"
   - "/audit"
 required_gates:
   - "global_safety_truthfulness_gate"
@@ -46,4 +47,3 @@ work.
 - Do not delete prior decisions silently.
 - Mark superseded decisions explicitly.
 - Do not weaken validation requirements without user confirmation.
-

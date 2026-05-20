@@ -24,6 +24,7 @@ allowed_side_effects:
 requires_confirmation: false
 related_workflows:
   - "/test"
+  - "/debug"
   - "/code"
   - "/deploy"
   - "/visualize"

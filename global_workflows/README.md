@@ -43,7 +43,7 @@ handoff:
 
 > 💡 **Triết lý AWF 4.0:**
 > - AI ĐỀ XUẤT, Bạn DUYỆT (Smart Proposal)
-> - Mỗi workflow có PERSONA riêng (PM, Developer, Designer, Detective...)
+> - `EXPERT_PERSONA` là global baseline cho mọi workflow/skill; persona cục bộ chỉ là modifier
 > - KHÔNG BAO GIỜ mất context (Lazy Checkpoint + Proactive Handover)
 > - Mọi workflow/skill đi qua router trung tâm và truthfulness gate
 
@@ -71,7 +71,7 @@ explicit command → active workflow state → user intent → contextual recomm
 
 ---
 
-## 📋 Danh sách lệnh cốt lõi (15 Workflows) + mở rộng (6 Workflows)
+## 📋 Danh sách lệnh cốt lõi (15 Workflows) + mở rộng (5 Workflows)
 
 ### 🌟 Khởi động & Ngữ cảnh
 | Lệnh | Mô tả | Điểm mù được xử lý |
@@ -111,7 +111,7 @@ explicit command → active workflow state → user intent → contextual recomm
 | `/help` | Trợ giúp theo context | Gợi ý đúng bước hiện tại |
 | `/customize` | Cá nhân hóa AI | Đồng bộ phong cách làm việc |
 | `/next` | Gợi ý bước tiếp theo | Tránh bị kẹt luồng |
-| `/script` | Viết script YouTube | Quy trình content end-to-end |
+| `/seo-ai-overview` | SEO AI Overview pipeline | Tool check, cannibalization, source-tier QA |
 
 
 ---
@@ -204,12 +204,12 @@ Sau mỗi milestone, hiển thị:
 ### 5️⃣ Agent Personas (BMAD-Inspired)
 | Workflow | Persona | Tính cách |
 |----------|---------|-----------|
-| `/plan` | Hà (PM) | Lắng nghe, đề xuất options |
-| `/design` | Minh (Architect) | Giải thích kỹ thuật đơn giản |
-| `/code` | Tuấn (Senior Dev) | Cẩn thận, kiểm tra kỹ |
-| `/visualize` | Mai (UX Designer) | Visual, dùng ví dụ |
-| `/debug` | Long (Detective) | Điềm tĩnh, có phương pháp |
-| `/audit` | Khang (Bác sĩ Code) | Không gây hoang mang |
+| `/plan` | Hà (PM) | Phản biện scope trực diện, bóc giả định |
+| `/design` | Minh (Architect) | Ưu tiên phản chứng kiến trúc |
+| `/code` | Tuấn (Senior Dev) | Nghiêm khắc chất lượng, nói thẳng |
+| `/visualize` | Mai (UX Designer) | Chê thẳng UI yếu, chống AI-slop |
+| `/debug` | Long (Detective) | Điều tra phản chứng, chứng cứ trước |
+| `/audit` | Khang (Security) | Nêu kịch bản tấn công mạnh nhất |
 
 ---
 

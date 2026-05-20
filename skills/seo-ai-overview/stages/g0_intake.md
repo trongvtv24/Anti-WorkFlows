@@ -10,6 +10,28 @@ Làm rõ tất cả thông tin đầu vào trước khi bắt đầu. Agent khô
 
 ---
 
+## Tool Check (BẮT BUỘC trước khi hỏi intake)
+
+Trước khi hỏi 8 câu bắt buộc, agent phải kiểm tra:
+
+- `search_web` có sẵn không?
+- `browser_subagent` có sẵn không?
+
+### Nếu thiếu tool
+
+- Gắn mode: `manual-evidence`.
+- Thông báo rõ cho user:
+  - Tool thiếu nào.
+  - Bước nào sẽ bị ảnh hưởng (đặc biệt G1, G2, G4).
+- Yêu cầu user cung cấp dữ liệu thay thế:
+  - AI Overview copy/paste
+  - Top 5 URL + heading chính
+  - Raw facts theo từng mảnh (nếu đã có)
+
+> Không được tiếp tục sang G1/G2/G4 theo chế độ tự động nếu chưa có dữ liệu thay thế đủ tối thiểu.
+
+---
+
 ## 8 câu hỏi bắt buộc — Hỏi user trước khi bắt đầu
 
 Trình bày dưới dạng một form rõ ràng, hỏi tất cả 8 câu trong **một lần** (không hỏi lần lượt từng câu):
@@ -93,6 +115,7 @@ Dựa vào lĩnh vực website, phân loại ngay:
 ✅ YMYL Level đã xác định
 ✅ Tone Profile đã ghi nhận
 ✅ Content Map nếu user cung cấp
+✅ Tool mode đã ghi rõ: `auto-search` hoặc `manual-evidence`
 ```
 
 **Sau khi user confirm Intake Brief → chuyển sang G1.**

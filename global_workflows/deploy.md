@@ -74,6 +74,16 @@ Deploy là high-risk workflow. Trước khi deploy:
 - Không deploy, push, đổi DNS, đổi secret, hoặc chạy migration nếu chưa có xác nhận rõ.
 - Mọi skipped test, missing env, hoặc unverified claim phải block hoặc được user chấp nhận rõ cho staging/test.
 
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `deployment-patterns` (required): luôn dùng để dựng quy trình release/rollback an toàn.
+- `awf-shipping-launch` (required): luôn dùng cho launch checklist và release communication.
+- `github-ops` (conditional): bật khi deploy phụ thuộc CI/CD, PR status, release tagging.
+- `seo` (conditional): bật khi release chạm public pages/metadata/indexability.
+- `webapp-testing` (conditional): bật khi cần smoke/E2E browser verify trước hoặc sau deploy.
+
+Không có preflight evidence thì không được đẩy production.
+
 ---
 
 ### Bảng dịch thuật ngữ cho non-tech:

@@ -24,6 +24,7 @@ related_workflows:
   - "/audit"
   - "/deploy"
   - "/plan"
+  - "/design"
 required_gates:
   - "global_safety_truthfulness_gate"
 # AWF_METADATA_END

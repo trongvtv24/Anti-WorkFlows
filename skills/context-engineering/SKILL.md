@@ -21,6 +21,7 @@ allowed_side_effects:
 requires_confirmation: false
 related_workflows:
   - "/plan"
+  - "/decision"
   - "/code"
   - "/review"
 required_gates:

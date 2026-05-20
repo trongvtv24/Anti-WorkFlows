@@ -76,6 +76,33 @@
       "type": ["string", "null"],
       "description": "Current phase being worked on"
     },
+    "current_task_index": {
+      "type": ["integer", "null"],
+      "minimum": 1,
+      "description": "Current task index inside the active phase for resume support"
+    },
+    "current_task_id": {
+      "type": ["string", "null"],
+      "description": "Stable task identifier in the phase file (for example: phase-03.step-07)"
+    },
+    "phase_task_progress": {
+      "type": "object",
+      "description": "Per-phase checkpoint map to resume exactly at task level",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "total_tasks": { "type": "integer", "minimum": 0 },
+          "completed_tasks": {
+            "type": "array",
+            "items": { "type": "integer", "minimum": 1 }
+          },
+          "last_task_index": { "type": ["integer", "null"], "minimum": 1 },
+          "last_task_id": { "type": ["string", "null"] },
+          "last_checkpoint": { "type": ["string", "null"], "format": "date-time" }
+        }
+      },
+      "default": {}
+    },
     "pending_tasks": {
       "type": "array",
       "items": {

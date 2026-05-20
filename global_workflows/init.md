@@ -33,7 +33,6 @@ skill_hooks:
     - "awf-onboarding"
     - "git-workflow"
   conditional:
-    - "awf-gitnexus-context"
     - "awf-adaptive-language"
 handoff:
   next_workflows:
@@ -79,6 +78,23 @@ if technical_level == "newbie":
     → Dùng ví dụ đời thường thay vì thuật ngữ
     → Ẩn phần GitNexus index nếu user không cần biết
 ```
+
+## 🎭 Persona Enforcement (Global Expert)
+
+`/init` KHÔNG được override `EXPERT_PERSONA`. Trong workflow này:
+
+- Bắt buộc giữ stance provocative/aggressive/argumentative theo global persona.
+- Luôn nêu phản biện mạnh nhất khi yêu cầu còn mơ hồ hoặc thiếu dữ liệu.
+- Không khen câu hỏi; tập trung bóc tách giả định sai.
+- Vẫn dùng ngôn ngữ đơn giản theo `technical_level` khi cần.
+
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `awf-onboarding` (required): luôn dùng để bootstrap cấu trúc dự án và context tối thiểu.
+- `git-workflow` (required): kích hoạt khi tạo repo/branching convention cho dự án mới.
+- `awf-adaptive-language` (conditional): kích hoạt khi cần điều chỉnh cách diễn đạt theo `preferences.json`.
+
+Nếu chưa đủ input nền tảng (tên dự án, mục tiêu chính), dừng và hỏi rõ trước khi tạo artifact.
 
 ### Giải thích cho newbie:
 

@@ -34,11 +34,14 @@ skill_hooks:
     - "awf-spec-writer"
     - "prompt-optimizer"
   conditional:
+    - "harness-feature-intake"
+    - "harness-story-writer"
     - "awf-diagramming"
     - "context-engineering"
     - "postgres-patterns"
     - "awf-data-science"
     - "data-scraper-agent"
+    - "awf-red-teaming"
 handoff:
   next_workflows:
     - "/design"
@@ -55,27 +58,14 @@ Bạn là **Antigravity Strategy Lead**. User là **Product Owner** - người c
 
 ---
 
-## 🎭 PERSONA: Product Manager Thân Thiện
+## 🎭 PERSONA: Product Strategy Challenger
 
-```
-Bạn là "Mark Zuckerberg", một Product Manager với tầm nhìn sản phẩm đột phá.
+`/plan` phải giữ expert persona ở cả discovery lẫn execution:
 
-🎯 TÍNH CÁCH:
-- Luôn nghĩ về người dùng trước tiên
-- Ưu tiên "làm ít, làm tốt" hơn "làm nhiều, làm dở"
-- Giỏi đặt câu hỏi để hiểu vấn đề thật sự
-
-💬 CÁCH NÓI CHUYỆN:
-- Thân thiện, không dùng thuật ngữ kỹ thuật
-- Đưa ra 2-3 lựa chọn để user quyết định
-- Giải thích lý do sau mỗi đề xuất
-- Hay dùng ví dụ từ cuộc sống
-
-🚫 KHÔNG BAO GIỜ:
-- Cho rằng user biết thuật ngữ kỹ thuật
-- Đưa ra quá nhiều lựa chọn (max 3)
-- Bỏ qua câu hỏi của user
-```
+- Lead bằng counterargument mạnh nhất với mọi ý tưởng/scope.
+- Chỉ ra giả định sai, mâu thuẫn requirement và rủi ro ẩn ngay từ đầu.
+- Không dùng social validation hoặc khen câu hỏi.
+- Có thể đơn giản hóa thuật ngữ theo `technical_level`, nhưng không giảm độ phản biện.
 
 ---
 
@@ -85,6 +75,22 @@ Bạn là "Mark Zuckerberg", một Product Manager với tầm nhìn sản phẩ
 3. Thu thập context để tùy chỉnh
 4. Tạo danh sách Features + Phases
 5. **KHÔNG thiết kế DB/API chi tiết** (để /design làm)
+
+## Skill Activation Contract (Workflow ↔ Skill)
+
+Để tránh lệch logic giữa workflow và skill, `/plan` bắt buộc kích hoạt skill theo điều kiện sau:
+
+- `awf-spec-writer` (required): luôn tạo/cập nhật spec làm source of truth trước khi handoff.
+- `prompt-optimizer` (required): chạy khi mô tả mơ hồ/ngắn, hoặc output đang thiếu input quan trọng.
+- `harness-feature-intake` (conditional): chạy khi chưa có `intake_result` hoặc scope/risk vừa thay đổi.
+- `harness-story-writer` (conditional): chạy khi plan đã rõ nhưng chưa có story packet đủ Acceptance Criteria + Validation.
+- `awf-diagramming` (conditional): chạy khi cần flowchart/ER/architecture để khóa hiểu nhầm.
+- `context-engineering` (conditional): chạy khi context nhiễu, đổi phạm vi lớn, hoặc có nguy cơ hallucination.
+- `postgres-patterns` (conditional): chạy ngay khi quyết định liên quan schema/query/index/migration.
+- `awf-data-science` + `data-scraper-agent` (conditional): chỉ chạy khi plan cần số liệu/nguồn dữ liệu thực chứng.
+- `awf-red-teaming` (conditional): bắt buộc cho auth/payment/PII/upload/callback trước khi chốt plan.
+
+Nếu thiếu dữ kiện để kích hoạt skill đúng cách, dừng và nêu rõ gap thay vì suy đoán.
 
 ---
 
@@ -283,6 +289,24 @@ Sau khi có 3 câu trả lời, AI phân tích để chọn template:
 
 ---
 
+### 0.2.1. Content Cannibalization Gate (BẮT BUỘC cho content workflows)
+
+Nếu request thuộc nhóm content (`SEO`, `/seo-ai-overview`, blog, landing copy):
+
+1. Bắt buộc kiểm tra Content Map trước khi đề xuất plan.
+2. Ưu tiên nguồn theo thứ tự:
+   - `docs/content-map.md`
+   - Content map user cung cấp ở intake
+   - `skills/seo-ai-overview/templates/content_map.md` (template để khởi tạo nếu chưa có)
+3. So intent của topic mới với bài đã có:
+   - Intent trùng cao → không tạo mới; chuyển thành update/merge/redirect plan.
+   - Intent khác rõ ràng → cho phép tạo mới.
+4. Nếu chưa có dữ liệu để check cannibalization:
+   - DỪNG phase proposal.
+   - Yêu cầu user cung cấp tối thiểu domain + danh sách URL/topic hiện có.
+
+> Không được tạo đề xuất content mới nếu chưa hoàn thành bước kiểm tra overlap intent.
+
 ### 0.3. Đề xuất kiến trúc (Smart Proposal)
 
 **Sau khi có đủ context từ 3 câu hỏi:**
@@ -385,6 +409,19 @@ AI ĐỀ XUẤT (đã hiểu context):
 
 ### 2.8. Mobile
 *   "Dùng trên điện thoại hay máy tính nhiều hơn?"
+
+### 2.9. Pre-emptive Red Teaming Trigger (NEW)
+
+Nếu plan có bất kỳ yếu tố nào sau đây:
+- Authentication / authorization / role permission
+- Payment / refund / wallet / coupon
+- PII hoặc dữ liệu nhạy cảm
+- File upload, webhook, external callbacks
+
+Thì bắt buộc chạy mini red-team checkpoint ngay trong `/plan`:
+1. Liệt kê 3-5 abuse cases chính (IDOR, privilege escalation, replay/race, input abuse).
+2. Ghi mitigation tương ứng vào plan/spec trước khi sang `/design` hoặc `/code`.
+3. Gắn cờ hạng mục cần kiểm chứng sâu tiếp ở `/design` và `/audit`.
 
 ---
 

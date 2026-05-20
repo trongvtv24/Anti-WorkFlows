@@ -17,6 +17,17 @@ routing:
     - "global_safety_truthfulness_gate"
     - "expert_persona"
   context_contract: "context_system"
+persona_policy:
+  priority_order:
+    - "safety_and_truthfulness_gates"
+    - "expert_persona_global"
+    - "workflow_local_formatting_only"
+  expert_persona_scope:
+    include_categories: ["all"]
+    exclude_workflows: []
+  notes:
+    - "Expert persona is mandatory globally across all workflows and skills."
+    - "Workflow/skill local persona may only change structure/detail, not core aggressive/provocative/argumentative stance."
 risk_levels:
   low: "Read-only analysis, explanation, summaries, and recommendations."
   medium: "Local file edits, generated docs, tests, or bounded local automation."
@@ -68,7 +79,7 @@ workflows:
     next_workflows: ["/brainstorm", "/plan", "/customize"]
     required_gates: ["global_safety_truthfulness_gate", "context_system"]
     required_skills: ["awf-onboarding", "git-workflow"]
-    conditional_skills: ["awf-gitnexus-context", "awf-adaptive-language"]
+    conditional_skills: ["awf-adaptive-language"]
   - command: "/brainstorm"
     name: "brainstorm"
     path: "global_workflows/brainstorm.md"
@@ -90,7 +101,7 @@ workflows:
     next_workflows: ["/brainstorm", "/plan", "/story"]
     required_gates: ["global_safety_truthfulness_gate"]
     required_skills: ["harness-feature-intake"]
-    conditional_skills: ["prompt-optimizer"]
+    conditional_skills: []
   - command: "/plan"
     name: "plan"
     path: "global_workflows/plan.md"
@@ -101,7 +112,7 @@ workflows:
     next_workflows: ["/story", "/design", "/visualize", "/code", "/decision"]
     required_gates: ["global_safety_truthfulness_gate", "context_system"]
     required_skills: ["awf-spec-writer", "prompt-optimizer"]
-    conditional_skills: ["harness-feature-intake", "harness-story-writer", "awf-diagramming", "context-engineering", "postgres-patterns", "awf-data-science", "data-scraper-agent"]
+    conditional_skills: ["harness-feature-intake", "harness-story-writer", "awf-diagramming", "context-engineering", "postgres-patterns", "awf-data-science", "data-scraper-agent", "awf-red-teaming"]
   - command: "/story"
     name: "story"
     path: "global_workflows/story.md"
@@ -123,7 +134,7 @@ workflows:
     next_workflows: ["/visualize", "/code", "/decision"]
     required_gates: ["global_safety_truthfulness_gate"]
     required_skills: ["awf-diagramming"]
-    conditional_skills: ["harness-decision-log", "postgres-patterns", "karpathy-coding-principles"]
+    conditional_skills: ["harness-decision-log", "postgres-patterns", "karpathy-coding-principles", "awf-red-teaming"]
   - command: "/decision"
     name: "decision"
     path: "global_workflows/decision.md"
@@ -189,7 +200,7 @@ workflows:
     next_workflows: ["/test", "/audit", "/deploy"]
     required_gates: ["global_safety_truthfulness_gate"]
     required_skills: ["harness-proof-matrix"]
-    conditional_skills: ["webapp-testing", "awf-error-translator"]
+    conditional_skills: []
   - command: "/debug"
     name: "debug"
     path: "global_workflows/debug.md"
@@ -311,28 +322,17 @@ workflows:
     required_gates: ["context_system"]
     required_skills: ["awf-adaptive-language"]
     conditional_skills: []
-  - command: "/fb-post"
-    name: "fb-post"
-    path: "global_workflows/fb-post.md"
-    category: "content_publish"
-    priority: "medium"
-    risk_level: "critical"
-    triggers: ["/fb-post", "facebook post", "fanpage", "publish facebook"]
+  - command: "/seo-ai-overview"
+    name: "seo_ai_overview"
+    path: "global_workflows/seo_ai_overview.md"
+    category: "content"
+    priority: "high"
+    risk_level: "medium"
+    triggers: ["/seo-ai-overview", "/seo ai overview", "seo ai overview", "ai overview seo", "viet bai seo ai overview"]
     next_workflows: ["/save-brain"]
     required_gates: ["global_safety_truthfulness_gate", "context_system"]
-    required_skills: ["fb-publisher", "psycho-content-engineer"]
-    conditional_skills: ["awf-research-agent"]
-  - command: "/script"
-    name: "script"
-    path: "global_workflows/script.md"
-    category: "content"
-    priority: "medium"
-    risk_level: "medium"
-    triggers: ["/script", "youtube script", "squirrel finance", "video script"]
-    next_workflows: ["/save-brain"]
-    required_gates: ["global_safety_truthfulness_gate"]
-    required_skills: ["squirrel-scriptwriter"]
-    conditional_skills: ["awf-research-agent", "timestamp-to-visual-prompt", "squirrel-video-director", "manim-video", "remotion-video-creation"]
+    required_skills: ["seo-ai-overview"]
+    conditional_skills: ["awf-research-agent", "seo"]
   - command: null
     name: "readme"
     path: "global_workflows/README.md"
@@ -360,7 +360,7 @@ skills:
     activation: "explicit_or_intent"
     priority: "medium"
     risk_level: "medium"
-    related_workflows: ["/brainstorm", "/fb-post"]
+    related_workflows: ["/brainstorm"]
     allowed_side_effects: ["none"]
     requires_confirmation: false
   - name: "awf-adaptive-language"
@@ -414,7 +414,7 @@ skills:
     activation: "conditional"
     priority: "medium"
     risk_level: "low"
-    related_workflows: ["/plan", "/design", "/review"]
+    related_workflows: ["/plan", "/story", "/design", "/decision", "/visualize", "/review"]
     allowed_side_effects: ["generate_diagram"]
     requires_confirmation: false
   - name: "awf-document-parser"
@@ -486,7 +486,7 @@ skills:
     activation: "conditional"
     priority: "high"
     risk_level: "medium"
-    related_workflows: ["/audit", "/deploy", "/plan"]
+    related_workflows: ["/audit", "/deploy", "/plan", "/design"]
     allowed_side_effects: ["generate_report"]
     requires_confirmation: false
   - name: "awf-research-agent"
@@ -495,7 +495,7 @@ skills:
     activation: "conditional"
     priority: "high"
     risk_level: "medium"
-    related_workflows: ["/brainstorm", "/plan", "/script", "/fb-post"]
+    related_workflows: ["/brainstorm", "/plan", "/seo-ai-overview"]
     allowed_side_effects: ["web_research", "generate_report"]
     requires_confirmation: false
   - name: "awf-session-restore"
@@ -522,7 +522,7 @@ skills:
     activation: "conditional"
     priority: "high"
     risk_level: "medium"
-    related_workflows: ["/plan", "/code"]
+    related_workflows: ["/plan", "/story", "/code"]
     allowed_side_effects: ["write_spec_after_request"]
     requires_confirmation: false
   - name: "context-engineering"
@@ -531,7 +531,7 @@ skills:
     activation: "conditional"
     priority: "medium"
     risk_level: "low"
-    related_workflows: ["/plan", "/code", "/review"]
+    related_workflows: ["/plan", "/decision", "/code", "/review"]
     allowed_side_effects: ["none"]
     requires_confirmation: false
   - name: "data-scraper-agent"
@@ -561,15 +561,6 @@ skills:
     related_workflows: ["/visualize", "/code", "/review"]
     allowed_side_effects: ["generate_design_system"]
     requires_confirmation: false
-  - name: "fb-publisher"
-    path: "skills/fb-publisher/SKILL.md"
-    category: "content_publish"
-    activation: "explicit"
-    priority: "medium"
-    risk_level: "critical"
-    related_workflows: ["/fb-post"]
-    allowed_side_effects: ["queue_content", "publish_after_confirmation"]
-    requires_confirmation: true
   - name: "github-ops"
     path: "skills/github-ops/SKILL.md"
     category: "repo_ops"
@@ -603,7 +594,7 @@ skills:
     activation: "conditional"
     priority: "high"
     risk_level: "low"
-    related_workflows: ["/proof", "/test", "/audit"]
+    related_workflows: ["/proof", "/test", "/review", "/audit"]
     allowed_side_effects: ["write_validation_report_after_request"]
     requires_confirmation: false
   - name: "harness-decision-log"
@@ -612,7 +603,7 @@ skills:
     activation: "conditional"
     priority: "medium"
     risk_level: "medium"
-    related_workflows: ["/decision", "/plan", "/design", "/audit"]
+    related_workflows: ["/decision", "/plan", "/design", "/review", "/audit"]
     allowed_side_effects: ["write_decision_after_request"]
     requires_confirmation: false
   - name: "git-workflow"
@@ -633,15 +624,6 @@ skills:
     related_workflows: ["/code", "/debug", "/refactor", "/design", "/audit"]
     allowed_side_effects: ["none"]
     requires_confirmation: false
-  - name: "manim-video"
-    path: "skills/manim-video/SKILL.md"
-    category: "video"
-    activation: "conditional"
-    priority: "low"
-    risk_level: "medium"
-    related_workflows: ["/script"]
-    allowed_side_effects: ["generate_video_assets"]
-    requires_confirmation: false
   - name: "performance-optimization"
     path: "skills/performance-optimization/SKILL.md"
     category: "quality"
@@ -657,7 +639,7 @@ skills:
     activation: "conditional"
     priority: "medium"
     risk_level: "high"
-    related_workflows: ["/design", "/code", "/audit"]
+    related_workflows: ["/plan", "/design", "/code", "/audit"]
     allowed_side_effects: ["schema_plan", "migration_after_confirmation"]
     requires_confirmation: true
   - name: "prompt-optimizer"
@@ -675,17 +657,17 @@ skills:
     activation: "explicit_or_intent"
     priority: "medium"
     risk_level: "medium"
-    related_workflows: ["/fb-post", "/brainstorm"]
+    related_workflows: ["/brainstorm"]
     allowed_side_effects: ["draft_content"]
     requires_confirmation: false
-  - name: "remotion-video-creation"
-    path: "skills/remotion-video-creation/SKILL.md"
-    category: "video"
-    activation: "conditional"
-    priority: "low"
+  - name: "seo-ai-overview"
+    path: "skills/seo-ai-overview/SKILL.md"
+    category: "marketing"
+    activation: "explicit_or_intent"
+    priority: "high"
     risk_level: "medium"
-    related_workflows: ["/script", "/code"]
-    allowed_side_effects: ["code_generation_after_request"]
+    related_workflows: ["/seo-ai-overview", "/plan"]
+    allowed_side_effects: ["research", "draft_content", "generate_or_edit_seo_assets"]
     requires_confirmation: false
   - name: "seo"
     path: "skills/seo/SKILL.md"
@@ -693,35 +675,8 @@ skills:
     activation: "conditional"
     priority: "medium"
     risk_level: "medium"
-    related_workflows: ["/audit", "/deploy", "/review"]
+    related_workflows: ["/audit", "/deploy", "/review", "/seo-ai-overview"]
     allowed_side_effects: ["generate_or_edit_seo_assets"]
-    requires_confirmation: false
-  - name: "squirrel-scriptwriter"
-    path: "skills/squirrel-scriptwriter/SKILL.md"
-    category: "content"
-    activation: "explicit_or_intent"
-    priority: "medium"
-    risk_level: "medium"
-    related_workflows: ["/script"]
-    allowed_side_effects: ["draft_content", "write_files_after_request"]
-    requires_confirmation: false
-  - name: "squirrel-video-director"
-    path: "skills/squirrel-video-director/SKILL.md"
-    category: "video"
-    activation: "explicit_or_intent"
-    priority: "medium"
-    risk_level: "medium"
-    related_workflows: ["/script"]
-    allowed_side_effects: ["draft_prompts"]
-    requires_confirmation: false
-  - name: "timestamp-to-visual-prompt"
-    path: "skills/timestamp-to-visual-prompt/SKILL.md"
-    category: "video"
-    activation: "explicit_or_intent"
-    priority: "medium"
-    risk_level: "medium"
-    related_workflows: ["/script"]
-    allowed_side_effects: ["draft_prompts"]
     requires_confirmation: false
   - name: "ui-ux-pro-max"
     path: "skills/ui-ux-pro-max/SKILL.md"
@@ -738,6 +693,6 @@ skills:
     activation: "conditional"
     priority: "high"
     risk_level: "medium"
-    related_workflows: ["/test", "/code", "/deploy", "/visualize"]
+    related_workflows: ["/test", "/debug", "/code", "/deploy", "/visualize"]
     allowed_side_effects: ["run_browser_tests", "screenshots"]
     requires_confirmation: false

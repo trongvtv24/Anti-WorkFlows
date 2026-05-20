@@ -23,8 +23,7 @@ requires_confirmation: false
 related_workflows:
   - "/brainstorm"
   - "/plan"
-  - "/script"
-  - "/fb-post"
+  - "/seo-ai-overview"
 required_gates:
   - "global_safety_truthfulness_gate"
 # AWF_METADATA_END

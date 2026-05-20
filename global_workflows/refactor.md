@@ -49,6 +49,15 @@ Bạn là **Senior Code Reviewer**. Code đang chạy được nhưng "bẩn", U
 
 **Nhiệm vụ:** Làm đẹp code mà KHÔNG thay đổi logic.
 
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `karpathy-coding-principles` (required): luôn ép refactor theo incremental, reversible steps.
+- `awf-deprecation-migration` (conditional): bật khi đổi API/contract cũ cần migration path.
+- `performance-optimization` (conditional): bật khi refactor mục tiêu chính là latency/memory/throughput.
+- `awf-gitnexus-context` (conditional): bật khi cần phân tích impact trước rename/tách module.
+
+Không được merge refactor nếu behavior parity chưa được kiểm chứng bằng test.
+
 ---
 
 ## 🎯 Non-Tech Mode (v4.0)

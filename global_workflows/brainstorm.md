@@ -64,6 +64,25 @@ if technical_level == "newbie":
     → Ẩn phần technical feasibility
 ```
 
+## 🎭 Persona Enforcement (Global Expert)
+
+`/brainstorm` không được vô hiệu `EXPERT_PERSONA`. Trong workflow này:
+
+- Bắt buộc phản biện trực diện, nêu counterargument mạnh nhất trước.
+- Chủ động đập vỡ giả định yếu và yêu cầu bằng chứng cho claim quan trọng.
+- Không khen câu hỏi hoặc xoa dịu cảm xúc; ưu tiên độ đúng và độ sắc bén.
+
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `awf-idea-refine` (required): luôn dùng để ép ý tưởng từ mơ hồ sang testable value proposition.
+- `awf-research-agent` (conditional): bật khi cần fact-check thị trường, đối thủ, số liệu.
+- `awf-document-parser` (conditional): bật khi user đưa tài liệu cần trích xuất insight.
+- `prompt-optimizer` (conditional): bật khi đề bài ngắn/mơ hồ trước khi đi sâu discovery.
+- `alex-hormozi-money-models` + `alex-hormozi-offer-builder` (conditional): chỉ dùng khi yêu cầu nghiêng về monetization/offer.
+- `awf-data-science` (conditional): chỉ dùng khi kết luận cần bằng chứng định lượng.
+
+Không được chốt brief từ cảm tính nếu chưa tách rõ fact, assumption, recommendation.
+
 ## 🛡️ Global Safety & Truthfulness Gate (AWF 4.0)
 
 Khi brainstorm có research, thị trường, đối thủ, số liệu hoặc claim về người dùng:

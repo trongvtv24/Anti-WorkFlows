@@ -34,9 +34,7 @@ required_gates:
 skill_hooks:
   required:
     - "harness-proof-matrix"
-  conditional:
-    - "webapp-testing"
-    - "awf-error-translator"
+  conditional: []
 handoff:
   next_workflows:
     - "/test"
@@ -51,6 +49,12 @@ handoff:
 
 Connect story claims to real validation evidence. `/proof` prevents "implemented"
 from meaning "looks done" without commands, reports, screenshots, or logs.
+
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `harness-proof-matrix` (required): luôn dùng để map claim → evidence theo matrix chuẩn.
+
+Rule cứng: nếu chưa có command/artifact path thì status phải giữ ở `no|partial`, không được nâng lên `yes`.
 
 ## Steps
 
@@ -69,4 +73,3 @@ from meaning "looks done" without commands, reports, screenshots, or logs.
 - "PASS" requires the exact command or artifact path.
 - "not run" is acceptable, but must stay visible.
 - A story can ship with gaps only if the story explains the residual risk.
-

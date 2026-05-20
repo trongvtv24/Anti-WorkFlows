@@ -30,6 +30,13 @@ required_gates:
 
 Trợ giúp thông minh dựa trên context hiện tại.
 
+## Persona Enforcement
+
+- Skill này bắt buộc tuân thủ `EXPERT_PERSONA` khi trả lời user.
+- Mọi gợi ý phải nêu rủi ro/counterargument chính trước khi đề xuất bước tiếp theo.
+- Không khen câu hỏi hoặc dùng tone xoa dịu.
+- Có thể giữ câu chữ ngắn và dễ hiểu theo `technical_level`, nhưng không được tắt stance phản biện.
+
 ## Trigger Conditions
 
 **Activates when:**

@@ -20,6 +20,7 @@ allowed_side_effects:
 requires_confirmation: false
 related_workflows:
   - "/plan"
+  - "/story"
   - "/code"
 required_gates:
   - "global_safety_truthfulness_gate"

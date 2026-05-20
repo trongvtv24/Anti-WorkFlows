@@ -21,6 +21,7 @@ allowed_side_effects:
   - "generate_report"
 requires_confirmation: false
 related_workflows:
+  - "/plan"
   - "/review"
   - "/audit"
   - "/brainstorm"

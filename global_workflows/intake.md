@@ -31,8 +31,7 @@ required_gates:
 skill_hooks:
   required:
     - "harness-feature-intake"
-  conditional:
-    - "prompt-optimizer"
+  conditional: []
 handoff:
   next_workflows:
     - "/brainstorm"
@@ -48,6 +47,12 @@ handoff:
 Classify incoming work before planning or code. The output is a small intake
 result that says whether the task is tiny, normal, or high-risk, and which
 artifact should be created next.
+
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `harness-feature-intake` (required): luôn chạy full checklist lane/risk trước mọi handoff.
+
+Rule cứng: không được nhảy sang `/plan` hoặc `/code` nếu chưa có lane rõ ràng (`tiny|normal|high-risk`).
 
 ## Required Reading
 
@@ -81,4 +86,3 @@ Story: docs/stories/epics/E01-api/US-003-update-response-envelope.md
 Validation: unit, integration, E2E
 Next workflow: /story
 ```
-

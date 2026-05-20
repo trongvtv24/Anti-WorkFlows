@@ -30,6 +30,17 @@
   },
   "current_plan_path": "docs/specs/revenue-reports.md",
   "current_phase": "phase-03-ui",
+  "current_task_index": 2,
+  "current_task_id": "phase-03-ui.step-02",
+  "phase_task_progress": {
+    "phase-03-ui": {
+      "total_tasks": 5,
+      "completed_tasks": [1],
+      "last_task_index": 2,
+      "last_task_id": "phase-03-ui.step-02",
+      "last_checkpoint": "2026-04-29T09:30:00+07:00"
+    }
+  },
   "pending_tasks": [
     {
       "task": "Add date range filter to revenue chart",

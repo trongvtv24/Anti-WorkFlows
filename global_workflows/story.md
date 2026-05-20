@@ -52,6 +52,14 @@ handoff:
 Turn accepted work into a durable story packet before implementation. The story
 becomes the contract that `/code`, `/test`, `/proof`, and `/audit` check.
 
+## Skill Activation Contract (Workflow ↔ Skill)
+
+- `harness-story-writer` (required): luôn tạo story packet từ template chuẩn harness.
+- `awf-spec-writer` (conditional): bật khi story cần backfill spec rõ ràng hoặc spec hiện tại thiếu acceptance criteria.
+- `awf-diagramming` (conditional): bật khi story có luồng phức tạp cần diagram để tránh hiểu sai.
+
+Nếu story chưa đủ `Acceptance Criteria + Validation`, không handoff sang `/code`.
+
 ## Steps
 
 1. Read the intake result. If none exists, run `/intake` first.
@@ -71,4 +79,3 @@ becomes the contract that `/code`, `/test`, `/proof`, and `/audit` check.
   clearly labeled assumptions.
 - Do not mark evidence complete before commands are run.
 - If the story changes architecture or risk policy, hand off to `/decision`.
-

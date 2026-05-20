@@ -37,7 +37,7 @@ Tự động lưu checkpoint nhẹ để không mất ngữ cảnh giữa các w
 Skill này tuân thủ `global_workflows/CONTEXT_SYSTEM.md`.
 
 - Được append checkpoint nhẹ vào `.brain/session_log.txt`.
-- Được update các field hẹp trong `.brain/session.json`: `summary`, `working_on`, `current_plan_path`, `current_phase`, `pending_tasks`, `recent_changes`, `errors_encountered`, `skipped_tests`, `last_run`, `handover_required`.
+- Được update các field hẹp trong `.brain/session.json`: `summary`, `working_on`, `current_plan_path`, `current_phase`, `current_task_index`, `current_task_id`, `phase_task_progress`, `pending_tasks`, `recent_changes`, `errors_encountered`, `skipped_tests`, `last_run`, `handover_required`.
 - Không được tự ghi `brain.json` trừ khi `/save-brain` đang chạy.
 - Không được tự ghi note/ADR/decision bền vững; việc đó thuộc `/save-brain` hoặc `awf-note-taking` sau khi user xác nhận.
 - Claim chưa kiểm chứng phải đi vào `.brain/claims.md` thông qua `/save-brain`, không được ghi thành project fact.
@@ -134,6 +134,9 @@ append_to_file(".brain/session_log.txt", {
 
 session.summary = merge_summary(session.summary, summary)
 session.working_on = merge_narrow_progress(session.working_on, summary)
+session.current_task_index = detect_task_index_if_any()
+session.current_task_id = detect_task_id_if_any()
+session.phase_task_progress = merge_phase_progress(session.phase_task_progress)
 session.handover_required = trigger_type == "emergency"
 save_only_allowed_fields(".brain/session.json")
 ```
@@ -177,12 +180,11 @@ function get_warning_level():
 ### Save Snapshot (7 days retention)
 ```
 on_workflow_end():
-    snapshot = {
-        timestamp: now(),
-        session: session.json,
-        brain_summary: extract_brain_summary()
-    }
-    save_to(".brain/snapshots/{date}_{time}.json")
+    save_to(".brain/snapshots/session/{date}_{time}.json", session.json)
+
+    # brain backup for rollback safety (read-only copy)
+    if exists(".brain/brain.json"):
+        save_to(".brain/snapshots/brain/{date}_{time}.json", read(".brain/brain.json"))
 
     # Cleanup old snapshots
     delete_snapshots_older_than(7_days)
@@ -191,9 +193,14 @@ on_workflow_end():
 ### Restore from Snapshot
 ```
 if session.json corrupted:
-    latest_snapshot = get_latest_snapshot()
-    restore_from(latest_snapshot)
+    latest_session_snapshot = get_latest_snapshot(".brain/snapshots/session/")
+    restore_from(latest_session_snapshot)
     show: "Da khoi phuc tu backup gan nhat."
+
+if brain.json corrupted:
+    latest_brain_snapshot = get_latest_snapshot(".brain/snapshots/brain/")
+    restore_from(latest_brain_snapshot)
+    show: "Da khoi phuc brain.json tu backup gan nhat."
 ```
 
 ## User Messages

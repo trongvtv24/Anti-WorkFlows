@@ -104,7 +104,7 @@ If the content needs persuasion, use truthful framing:
 
 ## Workflow Requirements
 
-- `/plan`, `/brainstorm`, `/script`, `/fb-post`, research/content skills: maintain a claim ledger for factual or persuasive claims.
+- `/plan`, `/brainstorm`, `/seo-ai-overview`, research/content skills: maintain a claim ledger for factual or persuasive claims.
 - `/code`, `/debug`, `/refactor`: ground changes in observed code and keep scope minimal.
 - `/test`, `/audit`, `/deploy`: report only checks that actually ran; label skipped checks.
 - `/save-brain`: store decisions and assumptions separately from facts.
@@ -126,4 +126,3 @@ Unverified claims not used:
 Recommended next step:
 - ...
 ```
-
