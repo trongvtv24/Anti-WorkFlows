@@ -1,0 +1,17 @@
+* text=auto
+
+# Keep common source/docs stable with LF across platforms
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.py text eol=lf
+*.toml text eol=lf
+*.csv text eol=lf
+*.txt text eol=lf
+*.sh text eol=lf
+
+# Windows-native scripts
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
