@@ -1,0 +1,112 @@
+awf_version: "4.0.0"
+metadata_schema_version: "1.0.0"
+status: "active"
+source_of_truth:
+  router: "awf_manifest.yaml"
+routing:
+  precedence:
+    - "explicit_command"
+    - "active_workflow_state"
+    - "user_intent"
+    - "contextual_recommendation"
+  default_language: "vi"
+  fallback_workflow: null
+persona_policy:
+  priority_order:
+    - "workflow_local_formatting_only"
+risk_levels:
+  low: "Read-only analysis, explanation, summaries, and recommendations."
+  medium: "Local file edits, generated docs, tests, or bounded local automation."
+  high: "Dependency changes, schema changes, deploy, publish, browser control, process control, or external APIs."
+  critical: "Public posting, production deploy, destructive operations, secrets, or account-impacting actions."
+confirmation_policy:
+  read_only_auto: "May run without user confirmation."
+  normal_edits: "May run after the user asks for implementation."
+  high_risk: "Requires clear user confirmation before execution."
+  forbidden_without_explicit_confirmation:
+    - "production_deploy"
+    - "public_publish"
+    - "delete_data"
+    - "destructive_git"
+    - "secret_or_token_change"
+    - "kill_process"
+    - "schema_migration"
+workflows:
+
+  - command: "/seo-ai-overview"
+    name: "seo_ai_overview"
+    path: "skills/seo-ai-overview/seo_ai_overview.md"
+    category: "content"
+    priority: "high"
+    risk_level: "medium"
+    triggers: ["/seo-ai-overview", "/seo ai overview", "seo ai overview", "ai overview seo", "viet bai seo ai overview"]
+    next_workflows: []
+    required_gates: []
+    required_skills: ["seo-ai-overview"]
+    conditional_skills: []
+  - command: "/youtube-8-agents"
+    name: "youtube_8_agents"
+    path: "skills/youtube-8-agents/wf_youtube_8_agents.md"
+    category: "content"
+    priority: "high"
+    risk_level: "low"
+    triggers: ["/youtube-8-agents", "youtube-8-agents", "phan tich youtube", "youtube script analysis"]
+    next_workflows: []
+    required_gates: []
+    required_skills: ["youtube-8-agents"]
+    conditional_skills: []
+skills:
+  - name: "alex-hormozi-money-models"
+    path: "skills/alex-hormozi-money-models/SKILL.md"
+    category: "business"
+    activation: "explicit_or_intent"
+    priority: "medium"
+    risk_level: "medium"
+    related_workflows: []
+    allowed_side_effects: ["none"]
+    requires_confirmation: false
+  - name: "alex-hormozi-offer-builder"
+    path: "skills/alex-hormozi-offer-builder/SKILL.md"
+    category: "business"
+    activation: "explicit_or_intent"
+    priority: "medium"
+    risk_level: "medium"
+    related_workflows: []
+    allowed_side_effects: ["none"]
+    requires_confirmation: false
+  - name: "capture-request-endpoints"
+    path: "skills/capture-request-endpoints/SKILL.md"
+    category: "system"
+    activation: "explicit"
+    priority: "medium"
+    risk_level: "medium"
+    related_workflows: []
+    allowed_side_effects: ["network_requests"]
+    requires_confirmation: false
+  - name: "psycho-content-engineer"
+    path: "skills/psycho-content-engineer/SKILL.md"
+    category: "content"
+    activation: "explicit_or_intent"
+    priority: "medium"
+    risk_level: "medium"
+    related_workflows: []
+    allowed_side_effects: ["draft_content"]
+    requires_confirmation: false
+  - name: "seo-ai-overview"
+    path: "skills/seo-ai-overview/SKILL.md"
+    category: "marketing"
+    activation: "explicit_or_intent"
+    priority: "high"
+    risk_level: "medium"
+    related_workflows: ["/seo-ai-overview"]
+    allowed_side_effects: ["research", "draft_content", "generate_or_edit_seo_assets"]
+    requires_confirmation: false
+  - name: "youtube-8-agents"
+    path: "skills/youtube-8-agents/SKILL.md"
+    category: "content"
+    activation: "explicit_or_intent"
+    priority: "high"
+    risk_level: "low"
+    related_workflows: ["/youtube-8-agents"]
+    allowed_side_effects: ["none"]
+    requires_confirmation: false
