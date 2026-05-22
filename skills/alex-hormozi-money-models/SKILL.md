@@ -7,7 +7,7 @@ description: >
 version: 1.0.0
 # AWF_METADATA_START
 type: skill
-name: "alex-hormozi-money-models"
+# name duplicate removed
 skill_version: "1.0.0"
 status: active
 category: "business"

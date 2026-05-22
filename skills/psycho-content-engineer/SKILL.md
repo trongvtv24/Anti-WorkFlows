@@ -22,7 +22,7 @@ triggers:
 version: 1.0.0
 # AWF_METADATA_START
 type: skill
-name: "psycho-content-engineer"
+# name duplicate removed
 skill_version: "1.0.0"
 status: active
 category: "content"

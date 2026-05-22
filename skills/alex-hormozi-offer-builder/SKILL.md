@@ -5,7 +5,7 @@ version: 1.0.0
 author: Antigravity
 # AWF_METADATA_START
 type: skill
-name: "alex-hormozi-offer-builder"
+# name duplicate removed
 skill_version: "1.0.0"
 status: active
 category: "business"
